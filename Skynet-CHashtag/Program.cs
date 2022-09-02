@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Mime;
-using System.Text.Json;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -16,7 +9,7 @@ using OpenAI;
 
 public class MyFirstModule : BaseCommandModule {
     [Command("gpt3")]
-    public async Task GPT3Command(CommandContext ctx, string prompt) {
+    public async Task Gpt3Command(CommandContext ctx, string prompt) {
         var api = new OpenAIAPI(apiKeys:"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");
         var request = new CompletionRequestBuilder()
             .WithPrompt($"{prompt}")
@@ -46,9 +39,9 @@ public class MyFirstModule : BaseCommandModule {
     }
 
     [Command("tts")]
-    public async Task TTSCommand(CommandContext ctx, string text) {
+    public async Task TtsCommand(CommandContext ctx, string text) {
         using var client = new HttpClient();
-        string content = "";
+        string content;
         text = text.Replace("+", "plus").Replace(" ", "+").Replace("&", "and");
         
         var response = await client.GetAsync($"https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/?text_speaker=en_us_002&req_text={text}");
@@ -66,9 +59,9 @@ public class MyFirstModule : BaseCommandModule {
         string decodedContent = Encoding.UTF8.GetString(b64Data);
         await File.WriteAllTextAsync("voice.mp3", decodedContent);
         
-        using (var fs = new FileStream("voice.mp3", FileMode.Open, FileAccess.Read))
+        await using (var fs = new FileStream("voice.mp3", FileMode.Open, FileAccess.Read))
         {
-            var msg = await new DiscordMessageBuilder()
+            await new DiscordMessageBuilder()
                 .WithContent("the")
                 .WithFiles(new Dictionary<string, Stream>() { { "voice1.mp3", fs } })
                 .SendAsync(ctx.Channel);           
@@ -109,6 +102,10 @@ namespace Skynet_CHashtag {
                     //Console.WriteLine("calling"); // debug
                     await WhoUpPlayingWithTheyWorm(s);
                 }
+
+                if (cancellationToken.IsCancellationRequested) {
+                    return;
+                }
             }
         }
 
@@ -119,7 +116,7 @@ namespace Skynet_CHashtag {
             int chance  = rnd.Next(1, 7);
             if (chance == 6) {
                 await using (var fs = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read)) {
-                    var msg = await new DiscordMessageBuilder()
+                    await new DiscordMessageBuilder()
                         .WithContent("@everyone who up playing with they worm?")
                         .WithFiles(new Dictionary<string, Stream>() { { "worm.png", fs } })
                         .SendAsync(channel);
