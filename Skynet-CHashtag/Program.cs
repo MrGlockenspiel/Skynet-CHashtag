@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -37,7 +38,13 @@ public class MyFirstModule : BaseCommandModule {
         var result = await api.Completions.CreateCompletionAsync(request);
         await ctx.RespondAsync($"{result}");
     }
-    
+
+    [Command("time")]
+    public async Task TimetestCommand(CommandContext ctx) {
+        string time = DateTime.Now.ToString("h:mm");
+        await ctx.RespondAsync($"{time}");
+    }
+
     [Command("tts")]
     public async Task TTSCommand(CommandContext ctx, string text) {
         using var client = new HttpClient();
@@ -87,15 +94,37 @@ namespace Skynet_CHashtag {
             });
             
             commands.RegisterCommands(Assembly.GetExecutingAssembly());
-            
-            /*discord.MessageCreated += async (s, e) => {
-                if (e.Message.Content.ToLower().StartsWith("ligma")) {
-                    await e.Message.RespondAsync("whats " + e.Message.Content);
-                }
-            };*/
-            
+
+            await TimeCheck("01:00", TimeSpan.FromSeconds(30), CancellationToken.None, discord);
             await discord.ConnectAsync();
             await Task.Delay(-1);
+        }
+
+        static async Task TimeCheck(String time, TimeSpan interval, CancellationToken cancellationToken, DiscordClient s) {
+            while (true) {
+                await Task.Delay(interval, cancellationToken);
+                string currentTime = DateTime.Now.ToString("HH:mm");
+                Console.WriteLine("iterating to {0}, getting to {1}", currentTime, time);
+                if (currentTime == time) {
+                    Console.WriteLine("calling");
+                    await WhoUpPlayingWithTheyWorm(s);
+                }
+            }
+        }
+
+        static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
+            DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements, IT server
+            //DiscordChannel channel = await s.GetChannelAsync(915592979039789106); // #bot-sandbox, IT server
+            Random rnd = new Random();
+            int chance  = rnd.Next(1, 7);
+            if (chance == 6) {
+                await using (var fs = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read)) {
+                    var msg = await new DiscordMessageBuilder()
+                        .WithContent("@everyone who up playing with they worm?")
+                        .WithFiles(new Dictionary<string, Stream>() { { "worm.png", fs } })
+                        .SendAsync(channel);
+                }
+            }
         }
     }
 }
