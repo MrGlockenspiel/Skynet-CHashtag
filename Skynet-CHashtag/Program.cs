@@ -104,9 +104,9 @@ namespace Skynet_CHashtag {
             while (true) {
                 await Task.Delay(interval, cancellationToken);
                 string currentTime = DateTime.Now.ToString("HH:mm");
-                Console.WriteLine("iterating to {0}, getting to {1}", currentTime, time);
+                //Console.WriteLine("iterating to {0}, getting to {1}", currentTime, time); // debug
                 if (currentTime == time) {
-                    Console.WriteLine("calling");
+                    //Console.WriteLine("calling"); // debug
                     await WhoUpPlayingWithTheyWorm(s);
                 }
             }
