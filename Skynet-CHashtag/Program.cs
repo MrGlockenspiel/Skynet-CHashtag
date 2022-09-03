@@ -1,65 +1,61 @@
 ﻿using System.Reflection;
-using System.Text;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Newtonsoft.Json.Linq;
 using OpenAI;
 
-
 namespace Skynet_CHashtag {
-    class SkynetCHashtag {
-        static void Main(string[] args) {
+    internal class SkynetCHashtag {
+        
+        internal static readonly OpenAIAPI OpenAi = new OpenAIAPI(apiKeys:"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");
+        
+        private static void Main(string[] args) {
             MainAsync().GetAwaiter().GetResult();
         }
 
-        static async Task MainAsync() {
-            var discord = new DiscordClient(new DiscordConfiguration() {
+        private static async Task MainAsync() {
+            var discord = new DiscordClient(new DiscordConfiguration {
                 Token = "OTMzMDk3MTA3OTkxMTkxNjMz.YeckZg.OJqwyibLyZkIDVROxxs-yAbVvkQ",
                 TokenType = TokenType.Bot,
                 Intents = DiscordIntents.AllUnprivileged
             });
 
-            var commands = discord.UseCommandsNext(new CommandsNextConfiguration() {
-                StringPrefixes = new[] { "!" }
+            var commands = discord.UseCommandsNext(new CommandsNextConfiguration {
+                StringPrefixes = new[] { "!" },
+                EnableDefaultHelp = false
             });
-            
-            commands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
-            await TimeCheck("01:00", TimeSpan.FromSeconds(30), CancellationToken.None, discord);
+            commands.RegisterCommands(Assembly.GetExecutingAssembly());
+
+            TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }
 
-        static async Task TimeCheck(String time, TimeSpan interval, CancellationToken cancellationToken, DiscordClient s) {
+        private static async Task TimeCheck(string time, TimeSpan interval, DiscordClient s) {
             while (true) {
-                await Task.Delay(interval, cancellationToken);
+                await Task.Delay(interval);
                 string currentTime = DateTime.Now.ToString("HH:mm");
-                //Console.WriteLine("iterating to {0}, getting to {1}", currentTime, time); // debug
+                // Console.WriteLine($"iterating to {currentTime}, getting to {time}"); // debug
                 if (currentTime == time) {
-                    //Console.WriteLine("calling"); // debug
+                    // Console.WriteLine("calling"); // debug
                     await WhoUpPlayingWithTheyWorm(s);
-                }
-
-                if (cancellationToken.IsCancellationRequested) {
-                    return;
                 }
             }
         }
 
-        static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
+        private static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
             DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements, IT server
-            //DiscordChannel channel = await s.GetChannelAsync(915592979039789106); // #bot-sandbox, IT server
+            // DiscordChannel channel = await s.GetChannelAsync(915592979039789106); // #bot-sandbox, IT server
             Random rnd = new Random();
-            int chance  = rnd.Next(1, 7);
-            if (chance == 6) {
-                await using (var fs = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read)) {
-                    await new DiscordMessageBuilder()
-                        .WithContent("@everyone who up playing with they worm?")
-                        .WithFiles(new Dictionary<string, Stream>() { { "worm.png", fs } })
-                        .SendAsync(channel);
-                }
+            int chance = rnd.Next(1, 7);
+            if (chance == 6)
+            {
+                await using var wormFile = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read);
+                await new DiscordMessageBuilder()
+                    .WithContent("@everyone who up playing with they worm?")
+                    .WithFiles(new Dictionary<string, Stream>() { { "worm.png", wormFile } })
+                    .SendAsync(channel);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,7 +10,8 @@ namespace Skynet_CHashtag.Commands;
 public class TextToSpeech : BaseCommandModule
 {
     [Command("tts")]
-    public static async Task TtsCommand(CommandContext ctx, string text) {
+    [RequireBotPermissions(Permissions.AttachFiles)]
+    public async Task TextToSpeechCommand(CommandContext ctx, string text) {
         using var client = new HttpClient();
         string content;
         text = text.Replace("+", "plus").Replace(" ", "+").Replace("&", "and");
@@ -28,13 +30,11 @@ public class TextToSpeech : BaseCommandModule
         byte[] b64Data = Convert.FromBase64String(content);
         string decodedContent = Encoding.UTF8.GetString(b64Data);
         await File.WriteAllTextAsync("voice.mp3", decodedContent);
-        
-        await using (var fs = new FileStream("voice.mp3", FileMode.Open, FileAccess.Read))
-        {
-            await new DiscordMessageBuilder()
-                .WithContent("the")
-                .WithFiles(new Dictionary<string, Stream>() { { "voice1.mp3", fs } })
-                .SendAsync(ctx.Channel);           
-        }
+
+        await using var voiceFile = new FileStream("voice.mp3", FileMode.Open, FileAccess.Read);
+        await new DiscordMessageBuilder()
+            .WithContent("the")
+            .WithFiles(new Dictionary<string, Stream> { { "voice1.mp3", voiceFile } })
+            .SendAsync(ctx.Channel);
     }
 }
