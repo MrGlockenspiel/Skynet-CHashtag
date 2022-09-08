@@ -2,6 +2,7 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using OpenAI;
 
 namespace Skynet_CHashtag {
@@ -24,6 +25,8 @@ namespace Skynet_CHashtag {
                 StringPrefixes = new[] { "!" },
                 EnableDefaultHelp = false
             });
+            
+            var slash = discord.UseSlashCommands();
 
             commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
