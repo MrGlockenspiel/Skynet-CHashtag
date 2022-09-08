@@ -26,7 +26,8 @@ namespace Skynet_CHashtag {
                 EnableDefaultHelp = false
             });
             
-            var slash = discord.UseSlashCommands();
+            var slashCommands = discord.UseSlashCommands();
+            slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
             commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
