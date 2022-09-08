@@ -23,6 +23,7 @@ public class Gpt3 : BaseCommandModule {
 public class Gpt3Slash : ApplicationCommandModule {
     [SlashCommand("gpt3", "Generate a response with GPT3")]
     public async Task Gpt3SlashCommand(InteractionContext ctx, [Option("prompt", "Prompt for generation")] string prompt) {
+        await ctx.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var request = new CompletionRequestBuilder()
             .WithPrompt($"{prompt}")
             .WithMaxTokens(100)
@@ -30,6 +31,6 @@ public class Gpt3Slash : ApplicationCommandModule {
 
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
         
-        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent($"{result}"));
+        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"{result}"));
     }
 }

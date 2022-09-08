@@ -23,6 +23,7 @@ public class Greentext : BaseCommandModule {
 public class GreentextSlash : ApplicationCommandModule {
     [SlashCommand("greentext", "Generate an AI 4chan greentext")]
     public async Task GreentextSlashCommand(InteractionContext ctx, [Option("prompt", "Prompt for generation")] string prompt) {
+        await ctx.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var request = new CompletionRequestBuilder()
             .WithPrompt($"write me a 4chan greentext \n{prompt}")
             .WithMaxTokens(200)
@@ -30,6 +31,6 @@ public class GreentextSlash : ApplicationCommandModule {
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
         
-        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent($"```\n{result}\n```"));
+        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"```\n{result}\n```"));
     }
 }
