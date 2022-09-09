@@ -16,7 +16,7 @@ public class Greentext : BaseCommandModule {
             .Build();
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
-        await ctx.RespondAsync($"```\n{result}\n```");
+        await ctx.RespondAsync($"```\n{result}\n```".Replace("\u006E\u0069\u0067\u0067", "fell"));
     }
 }
 
@@ -31,6 +31,6 @@ public class GreentextSlash : ApplicationCommandModule {
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
         
-        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"```\n{result}\n```"));
+        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"```\n{result}\n```".Replace("\u006E\u0069\u0067\u0067", "fell")));
     }
 }

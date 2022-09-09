@@ -16,7 +16,7 @@ public class Gpt3 : BaseCommandModule {
             .Build();
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
-        await ctx.RespondAsync($"{result}");
+        await ctx.RespondAsync($"{result}".Replace("\u006E\u0069\u0067\u0067", "fell"));
     }
 }
 
@@ -31,6 +31,6 @@ public class Gpt3Slash : ApplicationCommandModule {
 
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
         
-        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"{result}"));
+        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"{result}".Replace("\u006E\u0069\u0067\u0067", "fell")));
     }
 }
