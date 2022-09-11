@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using OpenAI;
@@ -21,15 +19,8 @@ namespace Skynet_CHashtag {
                 Intents = DiscordIntents.AllUnprivileged
             });
 
-            var commands = discord.UseCommandsNext(new CommandsNextConfiguration {
-                StringPrefixes = new[] { "!" },
-                EnableDefaultHelp = false
-            });
-            
             var slashCommands = discord.UseSlashCommands();
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
-
-            commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
             TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
             await discord.ConnectAsync();
