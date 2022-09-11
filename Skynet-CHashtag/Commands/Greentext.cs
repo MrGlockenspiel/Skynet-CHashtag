@@ -7,11 +7,12 @@ namespace Skynet_CHashtag.Commands;
 
 public class GreentextCommand : ApplicationCommandModule {
     [SlashCommand("greentext", "Generate an AI 4chan greentext")]
-    public async Task GreentextSlashCommand(InteractionContext ctx, [Option("prompt", "Prompt for generation")] string prompt) {
+    public async Task GreentextSlashCommand(InteractionContext ctx, [Option("prompt", "Prompt for generation")] string prompt, [Option("temperature", "Generation temperature (0-1, 0.8 is default)")] double temperature = 0.8) {
         await ctx.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var request = new CompletionRequestBuilder()
             .WithPrompt($"write me a 4chan greentext \n{prompt}")
             .WithMaxTokens(200)
+            .WithTemperature(temperature)
             .Build();
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
