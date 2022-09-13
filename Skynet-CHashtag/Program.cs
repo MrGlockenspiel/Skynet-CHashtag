@@ -2,19 +2,37 @@
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using OpenAI;
+using Tomlyn;
 
 namespace Skynet_CHashtag {
     internal class SkynetCHashtag {
-        
-        internal static readonly OpenAIAPI OpenAi = new OpenAIAPI(apiKeys:"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");
+
+        internal static OpenAIAPI OpenAi;
         
         private static void Main(string[] args) {
             MainAsync().GetAwaiter().GetResult();
         }
 
         private static async Task MainAsync() {
+            string configPath = "../../../../config.toml";
+            
+            if (!File.Exists(configPath)) {
+                string createText = "discordToken = <put key here> \nopenAiKey = <put key here>" + Environment.NewLine;
+                File.WriteAllText(configPath, createText);
+                Console.WriteLine("No config file found, generating template and closing");
+                Environment.Exit(0);
+            }
+            
+            string configToml = File.ReadAllText(configPath);
+            var model = Toml.ToModel(configToml);
+            
+            var discordToken = (string)model["discordToken"]!;
+            var openAiKey = (string)model["openAiKey"]!;
+        
+            OpenAi = new OpenAIAPI(apiKeys:openAiKey);
+            
             var discord = new DiscordClient(new DiscordConfiguration {
-                Token = "OTMzMDk3MTA3OTkxMTkxNjMz.YeckZg.OJqwyibLyZkIDVROxxs-yAbVvkQ",
+                Token = discordToken,
                 TokenType = TokenType.Bot,
                 Intents = DiscordIntents.AllUnprivileged
             });
