@@ -40,7 +40,18 @@ namespace Skynet_CHashtag {
             var slashCommands = discord.UseSlashCommands();
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
-            TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
+            await TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
+            
+            discord.MessageCreated += async (s, e) => {
+                if (e.Message.Content.ToLower().Contains("https://")) {
+                    Random rnd = new Random();
+                    int chance = rnd.Next(1, 10);
+                    if (chance == 10) {
+                        await e.Message.RespondAsync("https://tenor.com/view/ip-grabber-ip-grabber-thanos-gif-21846609");
+                    }
+                }
+            };
+
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }
@@ -62,8 +73,7 @@ namespace Skynet_CHashtag {
             // DiscordChannel channel = await s.GetChannelAsync(915592979039789106); // #bot-sandbox, IT server
             Random rnd = new Random();
             int chance = rnd.Next(1, 7);
-            if (chance == 6)
-            {
+            if (chance == 6) {
                 await using var wormFile = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read);
                 await new DiscordMessageBuilder()
                     .WithContent("@everyone who up playing with they worm?")
