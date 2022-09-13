@@ -40,7 +40,7 @@ namespace Skynet_CHashtag {
             var slashCommands = discord.UseSlashCommands();
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
-            await TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
+            TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
             
             discord.MessageCreated += async (s, e) => {
                 if (e.Message.Content.ToLower().Contains("https://")) {
