@@ -78,6 +78,7 @@ namespace Skynet_CHashtag {
                 await new DiscordMessageBuilder()
                     .WithContent("@everyone who up playing with they worm?")
                     .WithFiles(new Dictionary<string, Stream>() { { "worm.png", wormFile } })
+                    .WithAllowedMention(new EveryoneMention())
                     .SendAsync(channel);
             }
         }
