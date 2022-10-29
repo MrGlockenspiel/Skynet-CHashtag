@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using System.Text.RegularExpressions;
+using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using OpenAI;
@@ -25,7 +26,7 @@ public class GreentextCommand : ApplicationCommandModule {
             .Build();
         
         var result = await SkynetCHashtag.OpenAi.Completions.CreateCompletionAsync(request);
-        
-        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"```\n{result}\n```".Replace("\u006E\u0069\u0067\u0067", "fell")));
+        string filteredResult = Regex.Replace($"{result}", "\u006E\u0069\u0067\u0067", "fell", RegexOptions.IgnoreCase); // racism filter
+        await ctx.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent($"```\n{filteredResult}\n```"));
     }
 }

@@ -14,12 +14,13 @@ namespace Skynet_CHashtag {
         }
 
         private static async Task MainAsync() {
-            string configPath = "../../../../config.toml";
+            string userHome = Environment.GetEnvironmentVariable("HOME");
+            string configPath = userHome + "/skynet-config.toml";
             
             if (!File.Exists(configPath)) {
                 string createText = "discordToken = <put key here> \nopenAiKey = <put key here>" + Environment.NewLine;
                 File.WriteAllText(configPath, createText);
-                Console.WriteLine("No config file found, generating template and closing");
+                Console.WriteLine("No config file found, generating template at " + configPath + " and closing");
                 Environment.Exit(0);
             }
             
@@ -41,21 +42,12 @@ namespace Skynet_CHashtag {
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
             TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
-            
-            discord.MessageCreated += async (s, e) => {
-                if (e.Message.Content.ToLower().Contains("https://")) {
-                    Random rnd = new Random();
-                    int chance = rnd.Next(1, 10);
-                    if (chance == 10) {
-                        await e.Message.RespondAsync("https://tenor.com/view/ip-grabber-ip-grabber-thanos-gif-21846609");
-                    }
-                }
-            };
 
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }
 
+        // ignore all of this its not real
         private static async Task TimeCheck(string time, TimeSpan interval, DiscordClient s) {
             while (true) {
                 await Task.Delay(interval);
@@ -69,10 +61,9 @@ namespace Skynet_CHashtag {
         }
 
         private static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
-            DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements, IT server
-            // DiscordChannel channel = await s.GetChannelAsync(915592979039789106); // #bot-sandbox, IT server
+            DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements channel in the boys' server
             Random rnd = new Random();
-            int chance = rnd.Next(1, 7);
+            int chance = rnd.Next(1, 10);
             if (chance == 6) {
                 await using var wormFile = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read);
                 await new DiscordMessageBuilder()
