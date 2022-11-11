@@ -11,6 +11,7 @@
     <ItemGroup>
       <PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01169" />
       <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0-nightly-01169" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
       <PackageReference Include="OpenAI.Net" Version="1.0.2" />
       <PackageReference Include="Tomlyn" Version="0.15.0" />
     </ItemGroup>

@@ -5,9 +5,11 @@ using OpenAI;
 using Tomlyn;
 
 namespace Skynet_CHashtag {
-    internal class SkynetCHashtag {
+    public class SkynetCHashtag {
 
         internal static OpenAIAPI OpenAi;
+        public static string openAiKey;
+        public static string discordToken;
         
         private static void Main(string[] args) {
             MainAsync().GetAwaiter().GetResult();
@@ -27,8 +29,8 @@ namespace Skynet_CHashtag {
             string configToml = File.ReadAllText(configPath);
             var model = Toml.ToModel(configToml);
             
-            var discordToken = (string)model["discordToken"]!;
-            var openAiKey = (string)model["openAiKey"]!;
+            discordToken = (string)model["discordToken"]!;
+            openAiKey = (string)model["openAiKey"]!;
         
             OpenAi = new OpenAIAPI(apiKeys:openAiKey);
             
@@ -65,7 +67,7 @@ namespace Skynet_CHashtag {
             Random rnd = new Random();
             int chance = rnd.Next(1, 10);
             if (chance == 6) {
-                await using var wormFile = new FileStream("../../../../worm.png", FileMode.Open, FileAccess.Read);
+                await using var wormFile = new FileStream($"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/worm.png", FileMode.Open, FileAccess.Read);
                 await new DiscordMessageBuilder()
                     .WithContent("@everyone who up playing with they worm?")
                     .WithFiles(new Dictionary<string, Stream>() { { "worm.png", wormFile } })
