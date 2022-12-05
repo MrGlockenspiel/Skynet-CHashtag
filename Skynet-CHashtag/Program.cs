@@ -32,7 +32,7 @@ namespace Skynet_CHashtag {
             discordToken = (string)model["discordToken"]!;
             openAiKey = (string)model["openAiKey"]!;
         
-            OpenAi = new OpenAIAPI(apiKeys:openAiKey);
+            OpenAi = new OpenAIAPI(apiKeys:openAiKey, "text-davinci-003");
             
             var discord = new DiscordClient(new DiscordConfiguration {
                 Token = discordToken,
@@ -43,13 +43,14 @@ namespace Skynet_CHashtag {
             var slashCommands = discord.UseSlashCommands();
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
-            TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
+            //TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
 
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }
 
         // ignore all of this its not real
+        /* this code crashes my server every time it is called and i have no idea why
         private static async Task TimeCheck(string time, TimeSpan interval, DiscordClient s) {
             while (true) {
                 await Task.Delay(interval);
@@ -61,7 +62,6 @@ namespace Skynet_CHashtag {
                 }
             }
         }
-
         private static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
             DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements channel in the boys' server
             Random rnd = new Random();
@@ -75,5 +75,6 @@ namespace Skynet_CHashtag {
                     .SendAsync(channel);
             }
         }
+        */
     }
 }
