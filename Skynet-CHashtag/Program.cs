@@ -43,38 +43,8 @@ namespace Skynet_CHashtag {
             var slashCommands = discord.UseSlashCommands();
             slashCommands.RegisterCommands(typeof(SkynetCHashtag).Assembly);
 
-            //TimeCheck("01:00", TimeSpan.FromSeconds(30), discord);
-
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }
-
-        // ignore all of this its not real
-        /* this code crashes my server every time it is called and i have no idea why
-        private static async Task TimeCheck(string time, TimeSpan interval, DiscordClient s) {
-            while (true) {
-                await Task.Delay(interval);
-                string currentTime = DateTime.Now.ToString("HH:mm");
-                // Console.WriteLine($"iterating to {currentTime}, getting to {time}"); // debug
-                if (currentTime == time) {
-                    // Console.WriteLine("calling"); // debug
-                    await WhoUpPlayingWithTheyWorm(s);
-                }
-            }
-        }
-        private static async Task WhoUpPlayingWithTheyWorm(DiscordClient s) {
-            DiscordChannel channel = await s.GetChannelAsync(916080447765770291); // #announcements channel in the boys' server
-            Random rnd = new Random();
-            int chance = rnd.Next(1, 10);
-            if (chance == 6) {
-                await using var wormFile = new FileStream($"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/worm.png", FileMode.Open, FileAccess.Read);
-                await new DiscordMessageBuilder()
-                    .WithContent("@everyone who up playing with they worm?")
-                    .WithFiles(new Dictionary<string, Stream>() { { "worm.png", wormFile } })
-                    .WithAllowedMention(new EveryoneMention())
-                    .SendAsync(channel);
-            }
-        }
-        */
     }
 }

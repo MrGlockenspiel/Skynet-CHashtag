@@ -20,7 +20,7 @@ public class GreentextCommand : ApplicationCommandModule {
                 break;
         }
         var request = new CompletionRequestBuilder()
-            .WithPrompt($"write me a 4chan greentext \n{prompt}")
+            .WithPrompt($"write me a story in the form of a 4chan greentext. starting with \">be me\" and every line after starting with \">\". the topic will be {prompt}")
             .WithMaxTokens(200)
             .WithTemperature(temperature)
             .Build();
